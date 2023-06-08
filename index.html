@@ -53,10 +53,11 @@
                     info_name = personal_info[i];
                     value = $('input[name=' + info_name + ']').val();
                     if (!value || value === "") {
-                        switch (info_name) {
-                            default:
-                                window.alert("Please fill out the " + info_name + " field!");
-                        }
+                        window.alert("Please fill out the " + info_name + " field!");
+                        return;
+                    }
+                    if (info_name == "waiver" && value != "on") {
+                        window.alert("Please read and accept the liability waiver");
                         return;
                     }
                     values[info_name] = value;
@@ -552,6 +553,7 @@
                             <label>Email Address</label><input type="text" name="email">
                         </span>
                         <span class="text-cont">
+                            <label>Please Read and Accept the Release of Data Waiver</label><input type="checkbox"name="waiver">
                             <label><textarea readonly id="liability" rows="10" cols="50"></textarea></label>
                             </br>
                             <label>Do you accept?&nbsp</label><input type="checkbox"name="waiver">
