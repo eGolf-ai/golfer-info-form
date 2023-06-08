@@ -56,7 +56,7 @@
                         window.alert("Please fill out the " + info_name + " field!");
                         return;
                     }
-                    if (info_name == "waiver" && value != "on") {
+                    if (info_name == "waiver" && value != "accept") {
                         window.alert("Please read and accept the liability waiver");
                         return;
                     }
@@ -556,7 +556,7 @@
                             <label>Please Read and Accept the Release of Data Waiver</label><input type="checkbox"name="waiver">
                             <label><textarea readonly id="liability" rows="10" cols="50"></textarea></label>
                             </br>
-                            <label>Do you accept?&nbsp</label><input type="checkbox"name="waiver">
+                            <label>Do you accept?&nbsp</label><input type="checkbox"name="waiver"value="accept">
                         </span>
                     </div>
             </div>
