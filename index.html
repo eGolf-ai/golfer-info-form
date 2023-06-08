@@ -75,6 +75,11 @@
                         window.alert("Please read and accept the liability waiver by typing in \"yes\"");
                         return;
                     }
+                    var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                    if (info_name == "email" && !regex.test(value)) {
+                        window.alert("Please enter a valid email address");
+                        return;
+                    }
                     values[info_name] = value;
                 }
 
