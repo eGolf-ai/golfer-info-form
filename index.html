@@ -34,7 +34,8 @@
                 question_ids = get_question_ids();
 
                 for (var i = 0; i < question_ids.length; i++) {
-                    question_id = question_ids[i];                    
+                    question_id = question_ids[i].replace(" ", "_");   
+                    console.log(question_id);            
 
                     comment_question_id = question_id + '_text';
                     comment = $('input[name=' + comment_question_id + ']').val();
@@ -46,18 +47,32 @@
                     
                 }
 
-                personal_info = ['name', 'email', "waiver"]
+                personal_info = ['name', 'email', "waiver", 'age', 'gender', "handedness"]
                 question_ids.concat(personal_info)
 
                 for (var i = 0; i < personal_info.length; i++) {
                     info_name = personal_info[i];
-                    value = $('input[name=' + info_name + ']').val();
+                    switch (info_name) {
+                        case "gender":
+                            value = $('select[name=' + info_name + ']').val();
+                            if (value == "other") {
+                                value = $('input[name=other_gender]').val();
+                            }
+                            break;
+                        case "handedness":
+                            value = $('select[name=' + info_name + ']').val();
+                            console.log(value)
+                            break;
+                        default:
+                            value = $('input[name=' + info_name + ']').val();
+                    }
+                    
                     if (!value || value === "") {
                         window.alert("Please fill out the " + info_name + " field!");
                         return;
                     }
-                    if (info_name == "waiver" && value != "accept") {
-                        window.alert("Please read and accept the liability waiver");
+                    if (info_name == "waiver" && value.toLowerCase() != "yes") {
+                        window.alert("Please read and accept the liability waiver by typing in \"yes\"");
                         return;
                     }
                     values[info_name] = value;
@@ -81,14 +96,13 @@
                 question_ids = get_question_ids();
                 $.each(question_ids, function (index, id) {
                     $('.questions').append(HTML.replace(
-                        /{{ question.id }}/g, id).replace(
+                        /{{ question.id }}/g, id.replace(" ", "_")).replace(
                             "{{ question.title }}", id));
                 });
                 $('.questions').append(buttonsHTML);
                 $('.questions').append(jsonHTML);
                 $('.placeholder').hide();
                 $('.non-placeholder').show();
-                // $('textarea#liability').html($('textarea#liability').html().trim())
                 $.ajax({
                     url : "liability.txt",
                     dataType: "text",
@@ -101,8 +115,13 @@
                     }
                 });
             }
-
+            $('input[name=other_gender]').hide();
             renderForm();
+            $('select').on('change', function() {
+                if(this.value == "other") $('input[name=other_gender]').show();
+                else $('input[name=other_gender]').hide();
+            });
+
             $('.button.generate').on('click', function (e) {
                 e.preventDefault();
                 renderJSON();
@@ -533,13 +552,12 @@
 <body>
     <main class="forms-cont wrap-container">
         <div class="wrap col-md-8">
-            <h1>Self Grading Form</h1>
+            <h1>eGolf.ai Data Collection Form</h1>
             <p class="sp-byline">Please fill out this form.</p>
             <div class="placeholder">
                 <h2>eGolf.ai Data Collection Form</h2>
-                <p>Want to configure it yourself? Just pass the queryparam question_ids. For example, if your homework
-                    has parts `1a, 1b, 2a, 2b, 3`, use the URL <a
-                        href="index.html?question_ids=1a,1b,2a,2b,3">index.html?question_ids=1a,1b,2a,2b,3</a>.
+                <p>Want to configure it yourself? Just pass the queryparam question_ids. For example, use the URL <a
+                        href="index.html?question_ids=Golf%20Club,Question 2,Question 3">index.html?question_ids=Golf Club,Question 2,Question 3</a>.
                 </p>
             </div>
             <div class="non-placeholder">
@@ -553,10 +571,29 @@
                             <label>Email Address</label><input type="text" name="email">
                         </span>
                         <span class="text-cont">
-                            <label>Please Read and Accept the Release of Data Waiver</label><input type="checkbox"name="waiver">
+                            <label>Please Read and Accept the Release of Data Waiver</label>
                             <label><textarea readonly id="liability" rows="10" cols="50"></textarea></label>
                             </br>
-                            <label>Do you accept?&nbsp</label><input type="checkbox"name="waiver"value="accept">
+                            <p>Do you accept? Please type in "yes" if you do.</p><input type="text"name="waiver">
+                        </span>
+                        <span class="text-cont">
+                            <label>Age</label><input type="number" name="age">
+                        </span>
+                        <span class="text-cont">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                              </select>
+                              <input type="text" name="other_gender">
+                        </span>
+                        <span class="text-cont">
+                            <label>Preffered Golfing Hand</label>
+                            <select name="handedness">
+                                <option value="left">Left Hand</option>
+                                <option value="right">Right Hand</option>
+                            </select>
                         </span>
                     </div>
             </div>
