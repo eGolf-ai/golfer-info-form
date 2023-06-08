@@ -82,8 +82,8 @@
                     }
                     values[info_name] = value;
                 }
-
-                // values['question_ids'] = question_ids;
+                var d = new Date();
+                values['timestamp'] = d.toISOString();;
                 json = JSON.stringify(values);
                 $('.generated_json').show();
                 console.log(json);
